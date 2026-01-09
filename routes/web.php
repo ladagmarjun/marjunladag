@@ -8,6 +8,10 @@ Route::get('/', function () {
   return Inertia::render('portfolio');
 })->name('home');
 
+Route::get('/projects', function () {
+  return Inertia::render('projects');
+})->name('projects');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
