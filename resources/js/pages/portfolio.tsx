@@ -49,11 +49,11 @@ const Portfolio: React.FC<[]> = () => {
             </button>
 
             {/* Vertical Sidebar Decor */}
-            <div className={`fixed right-0 top-0 h-full w-16 border-l hidden lg:flex flex-col items-center py-10 z-50 transition-colors ${isDark ? 'border-white/10 bg-[#050505]' : 'border-slate-200 bg-white'}`}>
+            {/* <div className={`fixed right-0 top-0 h-full w-16 border-l hidden lg:flex flex-col items-center py-10 z-50 transition-colors ${isDark ? 'border-white/10 bg-[#050505]' : 'border-slate-200 bg-white'}`}>
                 <div className={`rotate-90 origin-center whitespace-nowrap tracking-[0.2em] text-sm font-bold uppercase mt-32 ${isDark ? 'text-white/40' : 'text-slate-400'}`}>
                     Marjun Ladag — 2026
                 </div>
-            </div>
+            </div> */}
 
             {/* HERO SECTION - REFINED */}
             <main id="home" className="relative max-w-7xl mx-auto px-10 pt-20 pb-32 flex flex-col items-center text-center">
@@ -149,20 +149,30 @@ const Portfolio: React.FC<[]> = () => {
                         <h2 className="text-2xl font-bold mb-12 tracking-tight flex items-center gap-3">
                             <span className="text-emerald-500">/</span> Recent Projects
                         </h2>
-                        <div className="grid gap-6">
-                            {projects.map((project, i) => (
-                                <div key={i} className={`p-6 rounded-2xl border transition-all group ${isDark ? 'bg-white/5 border-white/5 hover:border-emerald-500/50' : 'bg-white border-slate-200 shadow-sm hover:border-emerald-500/50'}`}>
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className="text-[10px] uppercase font-bold text-emerald-500">{project.type}</span>
-                                        <div className="flex gap-2">
-                                            {project.tech.map(t => <span key={t} className="text-[12px] opacity-40">{t}</span>)}
-                                        </div>
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-2 group-hover:text-emerald-500 transition-colors">{project.title}</h3>
-                                    <p className={`text-sm opacity-60`}>{project.desc}</p>
-                                </div>
-                            ))}
-                        </div>
+                    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-1">
+  {projects.map((project, i) => (
+    <div
+      key={i}
+      className={`p-6 rounded-2xl border transition-all group
+        ${isDark 
+          ? 'bg-white/5 border-white/5 hover:border-emerald-500/50' 
+          : 'bg-white border-slate-200 shadow-sm hover:border-emerald-500/50'}`}
+    >
+      <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2 sm:gap-0">
+        <span className="text-[10px] uppercase font-bold text-emerald-500">{project.type}</span>
+        <div className="flex flex-wrap gap-2">
+          {project.tech.map(t => (
+            <span key={t} className="text-[12px] opacity-40">{t}</span>
+          ))}
+        </div>
+      </div>
+      <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-emerald-500 transition-colors">
+        {project.title}
+      </h3>
+      <p className="text-sm sm:text-base opacity-60">{project.desc}</p>
+    </div>
+  ))}
+</div>
                         <div className="mt-8 flex justify-center">
                             <a href="/projects" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-emerald-500 transition-all">
                                 View All Projects
