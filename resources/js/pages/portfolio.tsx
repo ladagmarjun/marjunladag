@@ -19,11 +19,11 @@ const Portfolio: React.FC<[]> = () => {
     };
 
     const projects = [
-        { title: 'Dealer Management System', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwind', 'MySQL', 'Firebase'], desc: 'Handles product tracking, sales and reports.' },
-        { title: 'DMS POS', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'Manage sales, product tracking and generate sales records in real-time.' },
-        { title: 'DMS Dealer', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View sales, stock levels, and purchase records.' },
-        { title: 'DMS Stock', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View Stock levels.' },
-        { title: 'DMS Store', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View store orders, credit balance, and place orders.' },
+        { link: '', year: 2025,title: 'DMS Store', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View store orders, credit balance, and place orders.' },
+        { link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsdealer', year: 2025,title: 'DMS Dealer', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View sales, stock levels, and purchase records.' },
+        { link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsstock', year: 2025,title: 'DMS Stock', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'Provides real-time visibility into stock levels and inventory status.' },
+        { link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsops', year: 2025,title: 'DMS OPS', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'The Outlet Tagging feature ensures accurate association of sales agents, products, and transactions with specific outlets.' },
+        { link: 'https://dmsbusinesscare.com/', year: 2024, title: 'Dealer Management System', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwind', 'MySQL', 'Firebase'], desc: 'Handles product tracking, sales and reports.' },
     ];
 
     const experience = [
