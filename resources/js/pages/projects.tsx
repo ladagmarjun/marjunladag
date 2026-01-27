@@ -25,8 +25,8 @@ const Projects: React.FC<[]> = () => {
         { company: 'RackApp IT Solutions', link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsagent', year: 2024,title: 'DMS POS', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'Designed to help sales agents and simplify dealership operations, featuring daily route targets, live truck and inventory tracking, and merchandise issuance.' },
         { company: 'RackApp IT Solutions', link: '', year: 2024, title: 'RackMotors', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwind', 'MySQL'], desc: 'Manage sales, product tracking and generate sales records in real-time.' },
         { company: 'RackApp IT Solutions', link: '', year: 2023, title: 'RackPOS', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Bootstrap', 'MySQL'], desc: 'Manage sales, product tracking and generate sales records in real-time.' },
-        { company: 'Quality Cluc Leather Inc', link: '', year: 2022, title: 'QCLI Sales and Inventory Management System', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwinf', 'MySQL'], desc: 'Streamlines store operations with purchase management, sales tracking, and inventory control.' },
-        { company: 'Quality Cluc Leather Inc', link: '', year: 2021, title: 'QCLI Sales and Inventory Management System', type: 'Windows App', tech: ['VB.NET', 'MySQL'], desc: 'Streamlines store operations with purchase management, product production, sales tracking, and inventory control.' },
+        { company: 'Quality Club Leather Inc', link: '', year: 2022, title: 'QCLI Sales and Inventory Management System', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwinf', 'MySQL'], desc: 'Streamlines store operations with purchase management, sales tracking, and inventory control.' },
+        { company: 'Quality Club Leather Inc', link: '', year: 2021, title: 'QCLI Sales and Inventory Management System', type: 'Windows App', tech: ['VB.NET', 'MySQL'], desc: 'Streamlines store operations with purchase management, product production, sales tracking, and inventory control.' },
        ];
 
 
