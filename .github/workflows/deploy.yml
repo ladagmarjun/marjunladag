@@ -48,7 +48,8 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Rsync files to server
+      # App code -> laravel_react/  (excludes the public web root, .env and storage)
+      - name: Rsync application code
         run: |
           rsync -azr --delete \
             --exclude='.git' \
@@ -57,15 +58,22 @@ jobs:
             --exclude='tests' \
             --exclude='.env' \
             --exclude='storage' \
+            --exclude='public' \
             -e "ssh -p ${{ secrets.SSH_PORT }}" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
+
+      # Compiled assets -> public_html/build/  (managed entirely by Vite, safe to mirror)
+      - name: Rsync compiled assets
+        run: |
+          rsync -azr --delete \
+            -e "ssh -p ${{ secrets.SSH_PORT }}" \
+            ./public/build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.PUBLIC_PATH }}/build/
 
       - name: Run migrations, seeders & optimize
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "cd ${{ secrets.DEPLOY_PATH }} && \
              php artisan migrate:fresh --seed --force && \
-             php artisan storage:link || true && \
              php artisan optimize:clear && \
              php artisan optimize && \
              php artisan queue:restart"
