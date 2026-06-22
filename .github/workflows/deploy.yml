@@ -69,6 +69,20 @@ jobs:
             -e "ssh -p ${{ secrets.SSH_PORT }}" \
             ./public/build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.PUBLIC_PATH }}/build/
 
+      # Fail the deploy if any asset the manifest references is missing on the server
+      - name: Verify assets on server
+        run: |
+          ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
+            set -e
+            cd "${{ secrets.PUBLIC_PATH }}/build"
+            missing=0
+            for f in $(grep -oE "assets/[A-Za-z0-9_-]+\.(css|js)" manifest.json | sort -u); do
+              if [ ! -f "$f" ]; then echo "MISSING: $f"; missing=1; fi
+            done
+            if [ "$missing" != "0" ]; then echo "Asset verification FAILED"; exit 1; fi
+            echo "All manifest assets present on server"
+          '
+
       - name: Run migrations, seeders & optimize
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
