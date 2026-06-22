@@ -48,7 +48,9 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p ${{ secrets.SSH_PORT }} -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      # App code -> laravel_react/  (excludes the public web root, .env and storage)
+      # App code -> laravel_react/  (INCLUDES public/, so Laravel's Vite manifest at
+      # laravel_react/public/build/manifest.json stays in sync. Keeps .env, storage and
+      # the public/storage symlink untouched.)
       - name: Rsync application code
         run: |
           rsync -azr --delete \
@@ -58,29 +60,31 @@ jobs:
             --exclude='tests' \
             --exclude='.env' \
             --exclude='storage' \
-            --exclude='public' \
             -e "ssh -p ${{ secrets.SSH_PORT }}" \
             ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.DEPLOY_PATH }}/
 
-      # Compiled assets -> public_html/build/  (managed entirely by Vite, safe to mirror)
+      # Compiled assets -> public_html/build/  (the web root the browser downloads from)
       - name: Rsync compiled assets
         run: |
           rsync -azr --delete \
             -e "ssh -p ${{ secrets.SSH_PORT }}" \
             ./public/build/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:${{ secrets.PUBLIC_PATH }}/build/
 
-      # Fail the deploy if any asset the manifest references is missing on the server
-      - name: Verify assets on server
+      # Cross-check: every asset listed in the manifest Laravel READS
+      # (laravel_react/public/build/manifest.json) must exist in the web root
+      # the browser DOWNLOADS from (public_html/build). Catches manifest/asset drift.
+      - name: Verify manifest matches served assets
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} '
             set -e
-            cd "${{ secrets.PUBLIC_PATH }}/build"
+            MANIFEST="${{ secrets.DEPLOY_PATH }}/public/build/manifest.json"
+            SERVED="${{ secrets.PUBLIC_PATH }}/build"
             missing=0
-            for f in $(grep -oE "assets/[A-Za-z0-9_-]+\.(css|js)" manifest.json | sort -u); do
-              if [ ! -f "$f" ]; then echo "MISSING: $f"; missing=1; fi
+            for f in $(grep -oE "assets/[A-Za-z0-9_-]+\.(css|js)" "$MANIFEST" | sort -u); do
+              if [ ! -f "$SERVED/$f" ]; then echo "MISSING in web root: $f"; missing=1; fi
             done
             if [ "$missing" != "0" ]; then echo "Asset verification FAILED"; exit 1; fi
-            echo "All manifest assets present on server"
+            echo "Manifest and served assets are in sync"
           '
 
       - name: Run migrations, seeders & optimize
