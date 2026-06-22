@@ -1,9 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 
-const Projects: React.FC<[]> = () => { 
+interface Project {
+    id: number;
+    company: string | null;
+    link: string | null;
+    year: number | null;
+    title: string;
+    type: string | null;
+    tech: string[] | null;
+    description: string | null;
+}
+
+interface ProjectsProps {
+    projects?: Project[];
+}
+
+const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
     const [isDark, setIsDark] = useState(false);
-    
+
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') setIsDark(false);
@@ -14,20 +29,6 @@ const Projects: React.FC<[]> = () => {
         setIsDark(newTheme);
         localStorage.setItem('theme', newTheme ? 'light' : 'dark');
     };
-
-    
-    const projects = [
-        { company: 'RackApp IT Solutions', link: '', year: 2025,title: 'DMS Store', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View store orders, credit balance, and place orders.' },
-        { company: 'RackApp IT Solutions', link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsdealer', year: 2025,title: 'DMS Dealer', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'View sales, stock levels, and purchase records.' },
-        { company: 'RackApp IT Solutions', link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsstock', year: 2025,title: 'DMS Stock', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'Provides real-time visibility into stock levels and inventory status.' },
-        { company: 'RackApp IT Solutions', link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsops', year: 2025,title: 'DMS OPS', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'The Outlet Tagging feature ensures accurate association of sales agents, products, and transactions with specific outlets.' },
-        { company: 'RackApp IT Solutions', link: 'https://dmsbusinesscare.com/', year: 2024, title: 'Dealer Management System', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwind', 'MySQL', 'Firebase'], desc: 'Handles product tracking, sales and reports.' },
-        { company: 'RackApp IT Solutions', link: 'https://play.google.com/store/apps/details?id=com.rackapp.dmsagent', year: 2024,title: 'DMS POS', type: 'Mobile App', tech: ['React Native', 'Expo Go', 'Firebase', 'JavaScript'], desc: 'Designed to help sales agents and simplify dealership operations, featuring daily route targets, live truck and inventory tracking, and merchandise issuance.' },
-        { company: 'RackApp IT Solutions', link: '', year: 2024, title: 'RackMotors', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwind', 'MySQL'], desc: 'Manage sales, product tracking and generate sales records in real-time.' },
-        { company: 'RackApp IT Solutions', link: '', year: 2023, title: 'RackPOS', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Bootstrap', 'MySQL'], desc: 'Manage sales, product tracking and generate sales records in real-time.' },
-        { company: 'Quality Club Leather Inc', link: '', year: 2022, title: 'QCLI Sales and Inventory Management System', type: 'Web App', tech: ['Laravel', 'Vue.js', 'Inertia', 'Tailwinf', 'MySQL'], desc: 'Streamlines store operations with purchase management, sales tracking, and inventory control.' },
-        { company: 'Quality Club Leather Inc', link: '', year: 2021, title: 'QCLI Sales and Inventory Management System', type: 'Windows App', tech: ['VB.NET', 'MySQL'], desc: 'Streamlines store operations with purchase management, product production, sales tracking, and inventory control.' },
-       ];
 
 
     return (
@@ -105,7 +106,7 @@ const Projects: React.FC<[]> = () => {
 
                                         {/* Mobile description */}
                                         <p className="md:hidden mt-2 text-sm opacity-70 leading-relaxed">
-                                            {project.desc}
+                                            {project.description}
                                         </p>
 
                                         {/* Mobile Company */}
@@ -115,7 +116,7 @@ const Projects: React.FC<[]> = () => {
 
                                         {/* Mobile tech */}
                                         <div className="md:hidden flex flex-wrap gap-1 mt-2">
-                                            {project.tech.map((t, idx) => (
+                                            {(project.tech || []).map((t, idx) => (
                                                 <span
                                                 key={idx}
                                                 className={`text-[10px] px-2 py-0.5 rounded-full border
@@ -131,7 +132,7 @@ const Projects: React.FC<[]> = () => {
                                 {/* DESCRIPTION (DESKTOP ONLY) */}
                                 <td className="py-6 hidden md:table-cell align-top px-2">
                                     <span className="text-base opacity-70">
-                                        {project.desc}
+                                        {project.description}
                                     </span>
                                 </td>
 
@@ -144,7 +145,7 @@ const Projects: React.FC<[]> = () => {
                             {/* TECH STACK (DESKTOP ONLY) */}
                                 <td className="py-6 hidden md:table-cell align-top">
                                     <div className="flex flex-wrap gap-2">
-                                    {project.tech.map((t, idx) => (
+                                    {(project.tech || []).map((t, idx) => (
                                         <span
                                             key={idx}
                                             className={`text-[11px] px-2 py-0.5 rounded-full border
