@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
+import StarField from '@/components/star-field';
 
 interface Project {
     id: number;
@@ -17,27 +18,30 @@ interface ProjectsProps {
 }
 
 const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
-    const [isDark, setIsDark] = useState(false);
+    const [isDark, setIsDark] = useState(true);
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
         if (savedTheme === 'light') setIsDark(false);
+        else setIsDark(true);
     }, []);
 
     const toggleTheme = () => {
         const newTheme = !isDark;
         setIsDark(newTheme);
-        localStorage.setItem('theme', newTheme ? 'light' : 'dark');
+        localStorage.setItem('theme', newTheme ? 'dark' : 'light');
     };
 
 
     return (
-        <div className={`${isDark ? 'bg-[#050505] text-white' : 'bg-[#fafafa] text-slate-900'} min-h-screen font-sans transition-colors duration-500 selection:bg-emerald-500/30 scroll-smooth pb-32`}>
-            <Head  title='Projects Archive'/>
+        <div className={`${isDark ? 'text-white' : 'bg-[#fafafa] text-slate-900'} min-h-screen font-sans transition-colors duration-500 selection:bg-emerald-500/30 scroll-smooth pb-32`}>
+            <Head title='Projects Archive'/>
 
-            <Link 
-                href="/" 
-                className={`fixed top-10 left-10 md:left-24 z-[60] group flex items-center gap-2 text-sm font-bold uppercase tracking-widest bg-[#fafafa] rounded p-2 transition-all ${isDark ? 'text-white/50 hover:text-emerald-500 bg-black' : 'text-slate-400 hover:text-emerald-600'}`}
+            <StarField isDark={isDark} />
+
+            <Link
+                href="/"
+                className={`fixed top-10 left-10 md:left-24 z-[60] group flex items-center gap-2 text-sm font-bold uppercase tracking-widest rounded p-2 transition-all ${isDark ? 'text-white/50 hover:text-emerald-500 bg-white/5 backdrop-blur-sm' : 'text-slate-400 hover:text-emerald-600 bg-white'}`}
             >
                 <svg 
                     className="w-4 h-4 transform group-hover:-translate-x-1 transition-transform" 
@@ -60,7 +64,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
                 )}
             </button>
             
-            <main id="home" className="relative max-w-7xl mx-auto px-10 pt-20 pb-32 flex flex-col items-center text-center">
+            <main id="home" className="relative z-10 max-w-7xl mx-auto px-10 pt-20 pb-32 flex flex-col items-center text-center">
                 <div className="mb-16 text-left">
                     <h1 className="text-4xl font-bold mb-4 tracking-tight">Archive</h1>
                     <p className="opacity-60 max-w-2xl">A complete list of things I’ve built, ranging from full-scale applications to small experiments.</p>

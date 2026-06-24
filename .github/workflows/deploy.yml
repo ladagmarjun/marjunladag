@@ -91,7 +91,7 @@ jobs:
         run: |
           ssh -p ${{ secrets.SSH_PORT }} ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} \
             "cd ${{ secrets.DEPLOY_PATH }} && \
-             php artisan migrate:fresh --seed --force && \
+             php artisan migrate --force && \
              php artisan optimize:clear && \
              php artisan optimize && \
              php artisan queue:restart"

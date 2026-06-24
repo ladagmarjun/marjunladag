@@ -90,9 +90,16 @@ export default function ChatBot({ isDark }: ChatBotProps) {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 ) : (
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
-                            d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    /* Robot icon */
+                    <svg className="w-7 h-7" viewBox="0 0 64 64" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="16" y="20" width="32" height="26" rx="5" fill="white" opacity="0.95"/>
+                        <rect x="22" y="28" width="8" height="8" rx="2" fill="#10b981"/>
+                        <rect x="34" y="28" width="8" height="8" rx="2" fill="#10b981"/>
+                        <rect x="26" y="40" width="12" height="3" rx="1.5" fill="#10b981"/>
+                        <rect x="30" y="12" width="4" height="8" rx="2" fill="white" opacity="0.95"/>
+                        <circle cx="32" cy="11" r="3" fill="white" opacity="0.95"/>
+                        <rect x="6" y="28" width="6" height="10" rx="3" fill="white" opacity="0.8"/>
+                        <rect x="52" y="28" width="6" height="10" rx="3" fill="white" opacity="0.8"/>
                     </svg>
                 )}
             </button>
@@ -109,12 +116,20 @@ export default function ChatBot({ isDark }: ChatBotProps) {
                 >
                     {/* Header */}
                     <div className={`flex items-center gap-3 px-4 py-3 border-b ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
-                        <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs font-bold shrink-0">
-                            AI
+                        <div className="w-9 h-9 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                            <svg className="w-6 h-6" viewBox="0 0 64 64" fill="white" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="16" y="20" width="32" height="26" rx="5" fill="white" opacity="0.95"/>
+                                <rect x="22" y="28" width="8" height="8" rx="2" fill="#10b981"/>
+                                <rect x="34" y="28" width="8" height="8" rx="2" fill="#10b981"/>
+                                <rect x="26" y="40" width="12" height="3" rx="1.5" fill="#10b981"/>
+                                <rect x="30" y="12" width="4" height="8" rx="2" fill="white" opacity="0.95"/>
+                                <circle cx="32" cy="11" r="3" fill="white" opacity="0.95"/>
+                                <rect x="6" y="28" width="6" height="10" rx="3" fill="white" opacity="0.8"/>
+                                <rect x="52" y="28" width="6" height="10" rx="3" fill="white" opacity="0.8"/>
+                            </svg>
                         </div>
                         <div>
                             <p className="text-sm font-bold">Marjun's Assistant</p>
-                            <p className={`text-[10px] ${isDark ? 'text-white/40' : 'text-slate-400'}`}>Powered by Claude AI</p>
                         </div>
                         <div className="ml-auto flex items-center gap-1">
                             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
