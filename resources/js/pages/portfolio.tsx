@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
+import ChatBot from '@/components/chat-bot';
 
 
 interface Project {
@@ -263,6 +264,9 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects = [], experience = [], s
                     </motion.button>
                 ))}
                 </div>
+
+            {/* AI CHATBOT */}
+            <ChatBot isDark={isDark} />
         </div>
     );
 };
