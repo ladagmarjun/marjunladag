@@ -31,7 +31,7 @@
             }
         </style>
 
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+        <title inertia>{{ config('app.name', 'Marjun Ladag') }}</title>
 
         {{-- <link rel="icon" href="/favicon.ico" sizes="any"> --}}
         <link rel="icon" href="/ml.png" type="image/svg+xml">
