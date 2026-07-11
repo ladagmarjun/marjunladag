@@ -12,6 +12,7 @@ class Project extends Model
         'type',
         'year',
         'link',
+        'images',
         'description',
         'tech',
         'featured',
@@ -19,6 +20,7 @@ class Project extends Model
     ];
 
     protected $casts = [
+        'images' => 'array',
         'tech' => 'array',
         'featured' => 'boolean',
         'year' => 'integer',

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Project;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,7 +26,10 @@ class ProjectController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        Project::create($this->validated($request));
+        $data = $this->validated($request);
+        $data['images'] = $this->persistImages($request);
+
+        Project::create($data);
 
         return redirect()->route('admin.projects.index')->with('success', 'Project created.');
     }
@@ -39,13 +43,20 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project): RedirectResponse
     {
-        $project->update($this->validated($request));
+        $data = $this->validated($request);
+        $data['images'] = $this->persistImages($request, $project);
+
+        $project->update($data);
 
         return redirect()->route('admin.projects.index')->with('success', 'Project updated.');
     }
 
     public function destroy(Project $project): RedirectResponse
     {
+        foreach ($project->images ?? [] as $url) {
+            Storage::disk('public')->delete($this->pathFromUrl($url));
+        }
+
         $project->delete();
 
         return redirect()->route('admin.projects.index')->with('success', 'Project deleted.');
@@ -62,14 +73,48 @@ class ProjectController extends Controller
             'description' => ['nullable', 'string'],
             'tech' => ['nullable', 'array'],
             'tech.*' => ['string'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'max:5120'],
+            'existing_images' => ['nullable', 'array'],
+            'existing_images.*' => ['string'],
             'featured' => ['boolean'],
             'sort_order' => ['nullable', 'integer'],
         ]);
+
+        unset($data['images'], $data['existing_images']);
 
         $data['featured'] = $request->boolean('featured');
         $data['sort_order'] = $data['sort_order'] ?? 0;
         $data['tech'] = $data['tech'] ?? [];
 
         return $data;
+    }
+
+    /**
+     * Store newly uploaded images, keep the ones the user retained, and delete
+     * any that were removed. Returns the final list of public image URLs.
+     */
+    private function persistImages(Request $request, ?Project $project = null): array
+    {
+        $kept = array_values(array_filter((array) $request->input('existing_images', []), 'is_string'));
+
+        if ($project) {
+            foreach (array_diff($project->images ?? [], $kept) as $removed) {
+                Storage::disk('public')->delete($this->pathFromUrl($removed));
+            }
+        }
+
+        $images = $kept;
+
+        foreach ((array) $request->file('images', []) as $file) {
+            $images[] = Storage::disk('public')->url($file->store('projects', 'public'));
+        }
+
+        return $images;
+    }
+
+    private function pathFromUrl(string $url): string
+    {
+        return ltrim(str_replace('/storage/', '', $url), '/');
     }
 }

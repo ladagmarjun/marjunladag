@@ -14,6 +14,7 @@ interface Project {
     type: string | null;
     year: number | null;
     link: string | null;
+    images: string[] | null;
     description: string | null;
     tech: string[] | null;
     featured: boolean;
@@ -27,7 +28,19 @@ interface Props {
 export default function ProjectForm({ project }: Props) {
     const isEdit = !!project;
 
-    const { data, setData, post, put, processing, errors, transform } = useForm({
+    const { data, setData, post, processing, errors, transform } = useForm<{
+        title: string;
+        company: string;
+        type: string;
+        year: number | string;
+        link: string;
+        description: string;
+        tech: string;
+        featured: boolean;
+        sort_order: number;
+        images: File[];
+        existing_images: string[];
+    }>({
         title: project?.title ?? '',
         company: project?.company ?? '',
         type: project?.type ?? '',
@@ -37,12 +50,27 @@ export default function ProjectForm({ project }: Props) {
         tech: (project?.tech ?? []).join(', '),
         featured: project?.featured ?? false,
         sort_order: project?.sort_order ?? 0,
+        images: [],
+        existing_images: project?.images ?? [],
     });
 
     const breadcrumbs: BreadcrumbItem[] = [
         { title: 'Projects', href: '/admin/projects' },
         { title: isEdit ? 'Edit' : 'Create', href: '#' },
     ];
+
+    const addFiles = (files: FileList | null) => {
+        if (!files) return;
+        setData('images', [...data.images, ...Array.from(files)]);
+    };
+
+    const removeNewImage = (index: number) => {
+        setData('images', data.images.filter((_, i) => i !== index));
+    };
+
+    const removeExistingImage = (url: string) => {
+        setData('existing_images', data.existing_images.filter((u) => u !== url));
+    };
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -52,13 +80,12 @@ export default function ProjectForm({ project }: Props) {
                 .split(',')
                 .map((t) => t.trim())
                 .filter(Boolean),
+            // Method spoofing so file uploads work on update (multipart PUT).
+            ...(isEdit ? { _method: 'put' } : {}),
         }));
 
-        if (isEdit) {
-            put(`/admin/projects/${project!.id}`);
-        } else {
-            post('/admin/projects');
-        }
+        // Always POST; Inertia auto-uses multipart FormData when files are present.
+        post(isEdit ? `/admin/projects/${project!.id}` : '/admin/projects');
     };
 
     return (
@@ -97,6 +124,53 @@ export default function ProjectForm({ project }: Props) {
                         <Label htmlFor="link">Link</Label>
                         <Input id="link" value={data.link} onChange={(e) => setData('link', e.target.value)} placeholder="https://..." />
                         <InputError message={errors.link} />
+                        <p className="text-xs text-muted-foreground">If left empty, the project card shows a "View Images" gallery instead of an external link.</p>
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="images">Images</Label>
+                        <Input
+                            id="images"
+                            type="file"
+                            accept="image/*"
+                            multiple
+                            onChange={(e) => {
+                                addFiles(e.target.files);
+                                e.target.value = '';
+                            }}
+                        />
+                        <InputError message={errors.images} />
+
+                        {(data.existing_images.length > 0 || data.images.length > 0) && (
+                            <div className="mt-2 flex flex-wrap gap-3">
+                                {data.existing_images.map((url) => (
+                                    <div key={url} className="group relative h-24 w-24 overflow-hidden rounded-md border border-input">
+                                        <img src={url} alt="" className="h-full w-full object-cover" />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeExistingImage(url)}
+                                            className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs text-white opacity-0 transition group-hover:opacity-100"
+                                            aria-label="Remove image"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                                {data.images.map((file, i) => (
+                                    <div key={i} className="group relative h-24 w-24 overflow-hidden rounded-md border border-dashed border-input">
+                                        <img src={URL.createObjectURL(file)} alt="" className="h-full w-full object-cover" />
+                                        <button
+                                            type="button"
+                                            onClick={() => removeNewImage(i)}
+                                            className="absolute right-1 top-1 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-xs text-white opacity-0 transition group-hover:opacity-100"
+                                            aria-label="Remove image"
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="grid gap-2">

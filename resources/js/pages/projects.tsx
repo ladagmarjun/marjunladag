@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import StarField from '@/components/star-field';
 import CustomCursor from '@/components/custom-cursor';
+import ImageLightbox from '@/components/image-lightbox';
 
 interface Project {
     id: number;
@@ -11,6 +12,7 @@ interface Project {
     title: string;
     type: string | null;
     tech: string[] | null;
+    images: string[] | null;
     description: string | null;
 }
 
@@ -20,6 +22,8 @@ interface ProjectsProps {
 
 const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
     const [isDark, setIsDark] = useState(true);
+    const [gallery, setGallery] = useState<{ images: string[]; index: number } | null>(null);
+    const setGalleryImages = (images: string[], index = 0) => setGallery({ images, index });
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme');
@@ -165,7 +169,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
 
                             {/* VIEW BUTTON */}
                                 <td className="py-6 text-right align-top">
-                                    {project.link && (
+                                    {project.link ? (
                                     <a
                                         href={project.link}
                                         target="_blank"
@@ -190,7 +194,25 @@ const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
                                         />
                                         </svg>
                                     </a>
-                                    )}
+                                    ) : project.images && project.images.length > 0 ? (
+                                    <div className="flex justify-end gap-2">
+                                        {project.images.slice(0, 3).map((img, idx) => (
+                                            <button
+                                                key={idx}
+                                                type="button"
+                                                onClick={() => setGalleryImages(project.images!, idx)}
+                                                className={`relative h-14 w-20 overflow-hidden rounded-lg border transition-all hover:scale-105 hover:border-emerald-500/60 ${isDark ? 'border-white/10' : 'border-slate-200'}`}
+                                            >
+                                                <img src={img} alt={`${project.title} preview ${idx + 1}`} className="h-full w-full object-cover" />
+                                                {idx === 2 && project.images!.length > 3 && (
+                                                    <span className="absolute inset-0 flex items-center justify-center bg-black/60 text-xs font-bold text-white">
+                                                        +{project.images!.length - 3}
+                                                    </span>
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    ) : null}
                                 </td>
                             </tr>
                         ))}
@@ -200,8 +222,12 @@ const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
 
             </main>
 
+            {gallery && (
+                <ImageLightbox images={gallery.images} startIndex={gallery.index} onClose={() => setGallery(null)} />
+            )}
+
         </div>
     );
-    
+
 }
 export default Projects;
