@@ -8,6 +8,7 @@ interface Experience {
     role: string;
     company: string | null;
     years: string | null;
+    location: string | null;
 }
 
 interface Props {
@@ -41,13 +42,14 @@ export default function ExperiencesIndex({ experiences }: Props) {
                                 <th className="p-3">Role</th>
                                 <th className="p-3">Company</th>
                                 <th className="p-3">Years</th>
+                                <th className="p-3">Location</th>
                                 <th className="p-3 text-right">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {experiences.length === 0 && (
                                 <tr>
-                                    <td colSpan={4} className="p-4 text-center text-muted-foreground">
+                                    <td colSpan={5} className="p-4 text-center text-muted-foreground">
                                         No experience yet.
                                     </td>
                                 </tr>
@@ -57,6 +59,7 @@ export default function ExperiencesIndex({ experiences }: Props) {
                                     <td className="p-3 font-medium">{experience.role}</td>
                                     <td className="p-3">{experience.company}</td>
                                     <td className="p-3">{experience.years}</td>
+                                    <td className="p-3">{experience.location}</td>
                                     <td className="p-3 text-right">
                                         <div className="flex justify-end gap-2">
                                             <Button variant="outline" size="sm" asChild>

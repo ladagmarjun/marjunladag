@@ -57,6 +57,11 @@ class ExperienceController extends Controller
             'role' => ['required', 'string', 'max:255'],
             'company' => ['nullable', 'string', 'max:255'],
             'years' => ['nullable', 'string', 'max:255'],
+            'location' => ['nullable', 'string', 'max:255'],
+            'description' => ['nullable', 'array'],
+            'description.*' => ['string'],
+            'tech' => ['nullable', 'array'],
+            'tech.*' => ['string'],
             'sort_order' => ['nullable', 'integer'],
         ]);
 

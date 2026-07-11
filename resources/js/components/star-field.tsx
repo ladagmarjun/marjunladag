@@ -4,16 +4,6 @@ interface StarFieldProps {
     isDark: boolean;
 }
 
-interface Particle {
-    x: number; y: number;
-    vx: number; vy: number;
-    radius: number;
-    color: string;
-    opacity: number;
-    life: number;
-    maxLife: number;
-}
-
 interface EnergyStream {
     points: { x: number; y: number }[];
     color: string;
@@ -98,23 +88,6 @@ export default function StarField({ isDark }: StarFieldProps) {
             amp:   rand(60, 140),
         }));
 
-        // ── Particles (floating energy sparks) ──
-        const particles: Particle[] = [];
-        const spawnParticle = (W: number, H: number) => {
-            const color = STONE_COLORS[Math.floor(Math.random() * STONE_COLORS.length)];
-            particles.push({
-                x:       rand(0, W),
-                y:       rand(0, H),
-                vx:      rand(-0.3, 0.3),
-                vy:      rand(-0.6, -0.1),
-                radius:  rand(1, 3),
-                color,
-                opacity: rand(0.4, 0.9),
-                life:    0,
-                maxLife: rand(120, 300),
-            });
-        };
-
         let t = 0;
 
         const draw = () => {
@@ -185,52 +158,6 @@ export default function StarField({ isDark }: StarFieldProps) {
                     ctx.shadowBlur  = 12;
                     ctx.stroke();
                     ctx.shadowBlur  = 0;
-                });
-
-                // ── Spawn & draw particles ──
-                if (t % 4 === 0 && particles.length < 120) spawnParticle(W, H);
-
-                for (let i = particles.length - 1; i >= 0; i--) {
-                    const p = particles[i];
-                    p.life++;
-                    if (p.life > p.maxLife) { particles.splice(i, 1); continue; }
-
-                    const progress = p.life / p.maxLife;
-                    const fade     = progress < 0.2
-                        ? progress / 0.2
-                        : progress > 0.8
-                            ? (1 - progress) / 0.2
-                            : 1;
-
-                    p.x += p.vx;
-                    p.y += p.vy;
-
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fillStyle   = `rgba(${p.color},${p.opacity * fade})`;
-                    ctx.shadowColor = `rgba(${p.color},0.8)`;
-                    ctx.shadowBlur  = 8;
-                    ctx.fill();
-                    ctx.shadowBlur  = 0;
-                }
-
-                // ── Infinity ring glow at center top ──
-                const ringX = W * 0.5;
-                const ringY = H * 0.08;
-                const ringR = Math.min(W, H) * 0.18 + Math.sin(t * 0.005) * 8;
-                STONE_COLORS.forEach((color, i) => {
-                    const angle = (i / STONE_COLORS.length) * Math.PI * 2 + t * 0.003;
-                    const px = ringX + Math.cos(angle) * ringR;
-                    const py = ringY + Math.sin(angle) * ringR * 0.35;
-
-                    const glow = ctx.createRadialGradient(px, py, 0, px, py, 18);
-                    glow.addColorStop(0,   `rgba(${color},0.5)`);
-                    glow.addColorStop(0.4, `rgba(${color},0.15)`);
-                    glow.addColorStop(1,   `rgba(${color},0)`);
-                    ctx.fillStyle = glow;
-                    ctx.beginPath();
-                    ctx.arc(px, py, 18, 0, Math.PI * 2);
-                    ctx.fill();
                 });
             }
 

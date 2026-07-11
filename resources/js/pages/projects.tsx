@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link } from '@inertiajs/react';
 import StarField from '@/components/star-field';
+import CustomCursor from '@/components/custom-cursor';
 
 interface Project {
     id: number;
@@ -38,6 +39,7 @@ const Projects: React.FC<ProjectsProps> = ({ projects = [] }) => {
             <Head title='Projects Archive'/>
 
             <StarField isDark={isDark} />
+            <CustomCursor />
 
             <Link
                 href="/"

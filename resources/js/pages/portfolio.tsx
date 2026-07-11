@@ -3,6 +3,7 @@ import { Head } from '@inertiajs/react';
 import { motion } from 'framer-motion';
 import ChatBot from '@/components/chat-bot';
 import StarField from '@/components/star-field';
+import CustomCursor from '@/components/custom-cursor';
 
 
 interface Project {
@@ -58,6 +59,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects = [], experience = [], s
 
             {/* BACKGROUND */}
             <StarField isDark={isDark} />
+            <CustomCursor />
 
             {/* THEME TOGGLE */}
             <button 
@@ -88,7 +90,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects = [], experience = [], s
                     
                     <div className={`relative w-28 h-28 md:w-32 md:h-32 rounded-full overflow-hidden border-2 transition-transform duration-500 group-hover:scale-105 ${isDark ? 'border-white/10' : 'border-slate-200'}`}>
                         <img 
-                            src="/MarjunLadag.jpg"// Replace with your actual photo URL
+                            src="/MarjunLadag.png"// Replace with your actual photo URL
                             alt="Marjun Ladag" 
                             className="w-full h-full object-cover  transition-all duration-700"
                         />
@@ -153,62 +155,98 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects = [], experience = [], s
                 </div>
             </main>
 
-            {/* EXPERIENCE & PROJECTS COMBINED */}
+            {/* EXPERIENCE */}
             <section id="work" className={`relative z-10 max-w-7xl mx-auto px-10 py-24 border-t transition-colors ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
-                <div className="grid lg:grid-cols-2 gap-20">
-                    {/* Experience Column */}
-                    <div>
-                        <h2 className="text-2xl font-bold mb-12 tracking-tight flex items-center gap-3">
-                            <span className="text-emerald-500">/</span> Experience
-                        </h2>
-                        <div className="space-y-10">
-                            {experience.map((exp, i) => (
-                                <div key={i} className="group relative pl-8 border-l border-emerald-500/20">
-                                    <div className="absolute w-2 h-2 bg-emerald-500 rounded-full -left-[5px] top-2 group-hover:scale-150 transition-transform"></div>
-                                    <h4 className="text-xl font-bold">{exp.role}</h4>
-                                    <p className="text-emerald-500 font-medium mb-2">{exp.company}</p>
-                                    <span className="text-[10px] uppercase tracking-widest opacity-50">{exp.years}</span>
-                                </div>
-                            ))}
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12 gap-4">
+                    <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+                        <span className="text-emerald-500">/</span> Experience
+                    </h2>
+                    <a href="/experience" className="group hidden sm:flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-emerald-500 transition-all whitespace-nowrap">
+                        View All
+                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
+                <div className="grid gap-10 sm:grid-cols-2">
+                    {experience.map((exp, i) => (
+                        <div key={i} className="group relative pl-8 border-l border-emerald-500/20">
+                            <div className="absolute w-2 h-2 bg-emerald-500 rounded-full -left-[5px] top-2 group-hover:scale-150 transition-transform"></div>
+                            <h4 className="text-xl font-bold">{exp.role}</h4>
+                            <p className="text-emerald-500 font-medium mb-2">{exp.company}</p>
+                            <span className="text-[10px] uppercase tracking-widest opacity-50">{exp.years}</span>
                         </div>
-                    </div>
+                    ))}
+                </div>
+                <div className="mt-12 flex justify-center sm:hidden">
+                    <a href="/experience" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-emerald-500 transition-all">
+                        View All Experience
+                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
+            </section>
 
-                    {/* Apps & Web Column */}
+            {/* PROJECTS */}
+            <section id="projects" className={`relative z-10 max-w-7xl mx-auto px-10 py-24 border-t transition-colors ${isDark ? 'border-white/5' : 'border-slate-200'}`}>
+                <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between mb-12 gap-4">
                     <div>
-                        <h2 className="text-2xl font-bold mb-12 tracking-tight flex items-center gap-3">
-                            <span className="text-emerald-500">/</span> Recent Projects
+                        <h2 className="text-2xl font-bold tracking-tight flex items-center gap-3">
+                            <span className="text-emerald-500">/</span> Projects
                         </h2>
-                    <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-1">
-  {projects.map((project, i) => (
-    <div
-      key={i}
-      className={`p-6 rounded-2xl border transition-all group
-        ${isDark 
-          ? 'bg-white/5 border-white/5 hover:border-emerald-500/50' 
-          : 'bg-white border-slate-200 shadow-sm hover:border-emerald-500/50'}`}
-    >
-      <div className="flex flex-col sm:flex-row justify-between items-start mb-2 gap-2 sm:gap-0">
-        <span className="text-[10px] uppercase font-bold text-emerald-500">{project.type}</span>
-        <div className="flex flex-wrap gap-2">
-          {(project.tech || []).map(t => (
-            <span key={t} className="text-[12px] opacity-40">{t}</span>
-          ))}
-        </div>
-      </div>
-      <h3 className="text-lg sm:text-xl font-bold mb-2 group-hover:text-emerald-500 transition-colors">
-        {project.title}
-      </h3>
-      <p className="text-sm sm:text-base opacity-60">{project.description}</p>
-    </div>
-  ))}
-</div>
-                        <div className="mt-8 flex justify-center">
-                            <a href="/projects" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-emerald-500 transition-all">
-                                View All Projects
-                                <span className="transform group-hover:translate-x-1 transition-transform">→</span>
-                            </a>
-                        </div>
+                        <p className={`mt-3 text-sm ${isDark ? 'text-white/40' : 'text-slate-500'}`}>
+                            A selection of things I've designed, built, and shipped.
+                        </p>
                     </div>
+                    <a href="/projects" className="group hidden sm:flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-emerald-500 transition-all whitespace-nowrap">
+                        View All
+                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
+
+                <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    {projects.map((project, i) => {
+                        const card = (
+                            <>
+                                <div className="flex items-start justify-between mb-4 gap-3">
+                                    <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-500">{project.type || 'Project'}</span>
+                                    {project.year && (
+                                        <span className="text-[10px] font-mono tracking-widest opacity-40">{project.year}</span>
+                                    )}
+                                </div>
+                                <h3 className="text-lg font-bold mb-2 group-hover:text-emerald-500 transition-colors">
+                                    {project.title}
+                                </h3>
+                                <p className="text-sm opacity-60 leading-relaxed mb-5 line-clamp-3">{project.description}</p>
+                                <div className="mt-auto flex flex-wrap gap-2">
+                                    {(project.tech || []).map((t) => (
+                                        <span
+                                            key={t}
+                                            className={`text-[10px] px-2 py-0.5 rounded-full border ${isDark ? 'border-white/10 text-white/50' : 'border-slate-200 text-slate-500'}`}
+                                        >
+                                            {t}
+                                        </span>
+                                    ))}
+                                </div>
+                            </>
+                        );
+
+                        const cardClass = `flex flex-col h-full p-6 rounded-2xl border transition-all group ${isDark ? 'bg-white/5 border-white/5 hover:border-emerald-500/50' : 'bg-white border-slate-200 shadow-sm hover:border-emerald-500/50'}`;
+
+                        return project.link ? (
+                            <a key={i} href={project.link} target="_blank" rel="noopener noreferrer" className={cardClass}>
+                                {card}
+                            </a>
+                        ) : (
+                            <div key={i} className={cardClass}>
+                                {card}
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="mt-12 flex justify-center sm:hidden">
+                    <a href="/projects" className="group flex items-center gap-2 text-sm font-bold uppercase tracking-widest opacity-60 hover:opacity-100 hover:text-emerald-500 transition-all">
+                        View All Projects
+                        <span className="transform group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
                 </div>
             </section>
             {/* SKILLS SECTION */}
@@ -334,7 +372,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ projects = [], experience = [], s
                 className={`fixed bottom-10 left-1/2 -translate-x-1/2 border px-2 py-2 rounded-full flex items-center gap-1 z-50 shadow-2xl backdrop-blur-md
                 ${isDark ? 'bg-[#111111]/80 backdrop-blur-xl border-white/10' : 'bg-white/80 backdrop-blur-xl border-slate-200'}`}
             >
-                {['Home', 'Work', 'Skills'].map((item) => (
+                {['Home', 'Work', 'Projects', 'Skills'].map((item) => (
                     <motion.button
                     key={item}
                     whileTap={{ scale: 0.85 }}

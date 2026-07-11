@@ -2,19 +2,16 @@ import InputError from '@/components/input-error';
 import AppLogo from '@/components/app-logo';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 import { Form, Head, Link } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 
 interface LoginProps {
     status?: string;
-    canResetPassword: boolean;
     canRegister: boolean;
 }
 
 export default function Login({
     status,
-    canResetPassword,
     canRegister,
 }: LoginProps) {
     const [isDark, setIsDark] = useState(true);
@@ -137,20 +134,9 @@ export default function Login({
                                 </div>
 
                                 <div className="flex flex-col gap-2">
-                                    <div className="flex items-center justify-between">
-                                        <label htmlFor="password" className={labelClass}>
-                                            Password
-                                        </label>
-                                        {canResetPassword && (
-                                            <Link
-                                                href={request()}
-                                                tabIndex={5}
-                                                className="text-xs font-medium text-emerald-500 transition-colors hover:text-emerald-400"
-                                            >
-                                                Forgot password?
-                                            </Link>
-                                        )}
-                                    </div>
+                                    <label htmlFor="password" className={labelClass}>
+                                        Password
+                                    </label>
                                     <input
                                         id="password"
                                         type="password"

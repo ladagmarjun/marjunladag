@@ -11,6 +11,9 @@ interface Experience {
     role: string;
     company: string | null;
     years: string | null;
+    location: string | null;
+    description: string[] | null;
+    tech: string[] | null;
     sort_order: number;
 }
 
@@ -21,10 +24,13 @@ interface Props {
 export default function ExperienceForm({ experience }: Props) {
     const isEdit = !!experience;
 
-    const { data, setData, post, put, processing, errors } = useForm({
+    const { data, setData, post, put, processing, errors, transform } = useForm({
         role: experience?.role ?? '',
         company: experience?.company ?? '',
         years: experience?.years ?? '',
+        location: experience?.location ?? '',
+        description: (experience?.description ?? []).join('\n'),
+        tech: (experience?.tech ?? []).join(', '),
         sort_order: experience?.sort_order ?? 0,
     });
 
@@ -35,6 +41,18 @@ export default function ExperienceForm({ experience }: Props) {
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
+        transform((form) => ({
+            ...form,
+            description: form.description
+                .split('\n')
+                .map((line) => line.trim())
+                .filter(Boolean),
+            tech: form.tech
+                .split(',')
+                .map((t) => t.trim())
+                .filter(Boolean),
+        }));
+
         if (isEdit) {
             put(`/admin/experiences/${experience!.id}`);
         } else {
@@ -61,10 +79,36 @@ export default function ExperienceForm({ experience }: Props) {
                         <InputError message={errors.company} />
                     </div>
 
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="years">Years</Label>
+                            <Input id="years" value={data.years} onChange={(e) => setData('years', e.target.value)} placeholder="06/2023 - 12/2025" />
+                            <InputError message={errors.years} />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="location">Location</Label>
+                            <Input id="location" value={data.location} onChange={(e) => setData('location', e.target.value)} placeholder="Calbayog City, Philippines" />
+                            <InputError message={errors.location} />
+                        </div>
+                    </div>
+
                     <div className="grid gap-2">
-                        <Label htmlFor="years">Years</Label>
-                        <Input id="years" value={data.years} onChange={(e) => setData('years', e.target.value)} placeholder="2023 - 2025" />
-                        <InputError message={errors.years} />
+                        <Label htmlFor="description">Details (one bullet per line)</Label>
+                        <textarea
+                            id="description"
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            rows={5}
+                            placeholder={'Built and maintained full-stack web applications...\nDeveloped cross-platform mobile applications...'}
+                            className="rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                        />
+                        <InputError message={errors.description} />
+                    </div>
+
+                    <div className="grid gap-2">
+                        <Label htmlFor="tech">Tech (comma separated)</Label>
+                        <Input id="tech" value={data.tech} onChange={(e) => setData('tech', e.target.value)} placeholder="Laravel, Vue.js, React, MySQL, Git" />
+                        <InputError message={errors.tech} />
                     </div>
 
                     <div className="grid gap-2">

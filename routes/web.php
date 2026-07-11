@@ -12,6 +12,8 @@ Route::get('/', [PortfolioController::class, 'home'])->name('home');
 
 Route::get('/projects', [PortfolioController::class, 'projects'])->name('projects');
 
+Route::get('/experience', [PortfolioController::class, 'experience'])->name('experience');
+
 Route::post('/chat', [ChatController::class, 'chat'])->name('chat')->middleware('throttle:30,1');
 
 Route::middleware(['auth', 'verified'])->group(function () {

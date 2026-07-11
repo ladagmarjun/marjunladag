@@ -27,4 +27,11 @@ class PortfolioController extends Controller
             'projects' => Project::orderBy('sort_order')->get(),
         ]);
     }
+
+    public function experience(): Response
+    {
+        return Inertia::render('experience', [
+            'experience' => Experience::orderBy('sort_order')->get(),
+        ]);
+    }
 }

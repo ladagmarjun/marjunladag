@@ -12,7 +12,7 @@ interface ChatBotProps {
 export default function ChatBot({ isDark }: ChatBotProps) {
     const [open, setOpen] = useState(false);
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'assistant', content: "Hi! I'm Marjun's AI assistant. Ask me anything about his skills, experience, or projects!" }
+        { role: 'assistant', content: "Hey! I'm Marjun's AI assistant, feel free to ask me anything about Marjun 😊" }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
