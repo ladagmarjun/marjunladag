@@ -107,7 +107,9 @@ class ProjectController extends Controller
         $images = $kept;
 
         foreach ((array) $request->file('images', []) as $file) {
-            $images[] = Storage::disk('public')->url($file->store('projects', 'public'));
+            // Store a root-relative path so images resolve on any domain
+            // (an absolute URL would bake in the current host).
+            $images[] = '/storage/'.$file->store('projects', 'public');
         }
 
         return $images;
@@ -115,6 +117,10 @@ class ProjectController extends Controller
 
     private function pathFromUrl(string $url): string
     {
-        return ltrim(str_replace('/storage/', '', $url), '/');
+        // Handles both relative ("/storage/...") and legacy absolute
+        // ("http://host/storage/...") values.
+        $pos = strpos($url, '/storage/');
+
+        return $pos === false ? ltrim($url, '/') : substr($url, $pos + strlen('/storage/'));
     }
 }
